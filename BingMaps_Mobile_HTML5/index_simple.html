@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PebbleFIT</title>
+        <script 
+            type="text/javascript" 
+            src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0">
+        </script>
+        <script type="text/javascript">
+            var map = null;
+
+            function successCallback(position) {
+                // we create the location for the Bing Map
+                var userLocation = new Microsoft.Maps.Location(
+                    position.coords.latitude,
+                    position.coords.longitude);
+
+                // we add the pushpin to the map
+                var pin = new Microsoft.Maps.Pushpin(userLocation);
+                map.entities.push(pin);
+
+                // refresh the map centering the view on current location
+                map.setView({ center: userLocation });
+
+                showMessage("Your location is: " + userLocation.toString());
+            }
+
+            function errorCallback(error) {
+                var code = error.code;
+                var message = "unknown error";
+                switch (code) {
+                    case 1:
+                        message = "permission to geolocate you has been denied";
+                        break;
+                    case 2:
+                        message = "position is not available";
+                        break;
+                    case 3:
+                        message = "geolocation request timed out";
+                        break;
+                }
+                showMessage(message);
+            }
+
+            function showMessage(message) {
+                var div = document.getElementById("message");
+                div.innerHTML = message;
+            }
+
+            function getMap() {
+                // replace with your own Bing credentials
+                var mapOptions = {
+                    credentials: "AhXzZBKRsnTVM7M-LOFjoATuQPXll5Ufx25UIZNS2RgHNPmyBg1bh5KMzKxm3EmC",
+                    center: new Microsoft.Maps.Location(40.42, -3.8),
+                    mapTypeId: Microsoft.Maps.MapTypeId.road,
+                    zoom: 16
+                }
+
+                // we create the Bing map with a default position
+                map = new Microsoft.Maps.Map(document.getElementById("map"), mapOptions);
+
+                // if the browser supports Geolocation we do the request
+                if (navigator.geolocation) {
+                    var options = {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    };
+
+                    navigator.geolocation.getCurrentPosition(
+                        successCallback,
+                        errorCallback,
+                        options);
+                }
+                else {
+                    showError("Your browser does not support geolocation");
+                }
+            }
+        </script>
+    </head>
+    <body onload="getMap();">
+        <div id="map" style="position:relative; width:400px; height:400px;">
+        </div>
+        <div id="message"></div>
+    </body>
+</html>

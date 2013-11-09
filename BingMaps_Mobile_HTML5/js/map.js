@@ -198,8 +198,13 @@
 
         if (gpsEnabled) {
             // Get the user's current location
+            var options_bing = {
+               enableHighAccuracy: true,
+               timeout: 2000,
+               maximumAge: 0
+            };
+
             geoLocationProvider.getCurrentPosition({
-                enableHighAccuracy: boolean(true),
                 successCallback: function (e) {
                     gpsLayer.push(new Microsoft.Maps.Pushpin(e.center));
                     
@@ -214,17 +219,20 @@
 //                    h5_location;
                     // Uses HTML5's library to get current location 
                     // if Bing Maps fails to complete the task.
-                    if (!navigator.geolocation) {
-                        // Enable DOMWindow
-                        delete window.alert;
-                        window.alert("This browser doesn't support geolocation");
-                    } else {
-                        navigator.geolocation.getCurrentPosition(onPositionReady, onError);
-                        // Enable DOMWindow
-                        delete window.alert;
-                        window.alert("geolocation-not working");
-                    }
-                }
+                    // if (!navigator.geolocation) {
+                    //     // Enable DOMWindow
+                    //     delete window.alert;
+                    //     window.alert("This browser doesn't support geolocation");
+                    // } else {
+                    //     navigator.geolocation.getCurrentPosition(onPositionReady, onError);
+                    //     // Enable DOMWindow
+                    //     delete window.alert;
+                    //     window.alert("geolocation-not working");
+                    // }
+                },
+                options_bing
+                // enableHighAccuracy: true,
+                // maximumAge: 0
             });
         } else {
             //Remove the accuracy circle and cancel any request that might be processing
