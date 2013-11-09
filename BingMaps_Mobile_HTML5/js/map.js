@@ -208,12 +208,48 @@
 //                    window.alert("GPS Enabled: Error");
 
 //                    h5_location;
+                    // Get the current position from the browser
+                    // Uses HTML5's getlocation instead of Bing's
+                    if (!navigator.geolocation) {
+                        window.alert("This browser doesn't support geolocation");
+                    } else {
+                        navigator.geolocation.getCurrentPosition(onPositionReady, onError);
+                        window.alert("geolocation-not working");
+                    }
                 }
             });
         } else {
             //Remove the accuracy circle and cancel any request that might be processing
             geoLocationProvider.removeAccuracyCircle();
             geoLocationProvider.cancelCurrentRequest();
+        }
+    }
+
+    function onPositionReady(position) {
+        // Apply the position to the map
+        var location = new Microsoft.Maps.Location(position.coords.latitude,
+            position.coords.longitude);
+        _map.setView({ zoom: 18, center: location });
+ 
+        // Add a pushpin to the map representing the current location
+        var pin = new Microsoft.Maps.Pushpin(location);
+        _map.entities.push(pin);
+    }
+ 
+    function onError(err) {
+        switch (err.code) {
+            case 0:
+                alert("Unknown error");
+                break;
+            case 1:
+                alert("The user said no!");
+                break;
+            case 2:
+                alert("Location data unavailable");
+                break;
+            case 3:
+                alert("Location request timed out");
+                break;
         }
     }
 
