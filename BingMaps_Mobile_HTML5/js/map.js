@@ -201,6 +201,9 @@
             geoLocationProvider.getCurrentPosition({
                 successCallback: function (e) {
                     gpsLayer.push(new Microsoft.Maps.Pushpin(e.center));
+                    
+                    // Enable DOMWindow
+                    delete window.alert;
                     window.alert("GPS Enabled: No error");
                 },
                 errorCallback: function (e) {
@@ -208,12 +211,16 @@
 //                    window.alert("GPS Enabled: Error");
 
 //                    h5_location;
-                    // Get the current position from the browser
-                    // Uses HTML5's getlocation instead of Bing's
+                    // Uses HTML5's library to get current location 
+                    // if Bing Maps fails to complete the task.
                     if (!navigator.geolocation) {
+                        // Enable DOMWindow
+                        delete window.alert;
                         window.alert("This browser doesn't support geolocation");
                     } else {
                         navigator.geolocation.getCurrentPosition(onPositionReady, onError);
+                        // Enable DOMWindow
+                        delete window.alert;
                         window.alert("geolocation-not working");
                     }
                 }
@@ -225,6 +232,7 @@
         }
     }
 
+    // Called when Bing Maps' GetLocationProvider fails
     function onPositionReady(position) {
         // Apply the position to the map
         var location = new Microsoft.Maps.Location(position.coords.latitude,
