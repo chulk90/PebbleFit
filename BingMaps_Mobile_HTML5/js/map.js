@@ -199,6 +199,7 @@
         if (gpsEnabled) {
             // Get the user's current location
             geoLocationProvider.getCurrentPosition({
+                enableHighAccuracy: boolean(true),
                 successCallback: function (e) {
                     gpsLayer.push(new Microsoft.Maps.Pushpin(e.center));
                     
